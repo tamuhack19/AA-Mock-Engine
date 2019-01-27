@@ -100,7 +100,8 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
                     flightNumber,
                     baseCost,
                     destination: destinationCode,
-                    departureTime: departure
+                    departureTime: departure,
+                    durationInMinutes: duration,
                 } = flight;
 
                 // Change timezone without changing day
@@ -118,7 +119,15 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
                    .add(flight.durationInMinutes, 'minute')
                    .tz(arrivalTimeZone);  // Change timezone AFTER updating time
 
+                // Ideally, all of this data would be statically retrieved from the json file, and none of these random functions would be needed
                 let cost = +(baseCost * volatility * _.random(0.65, 1.3, true)).toFixed(2);
+                let speed = _.random(0, 885, false) + 'kph';
+                let altitude = _.random(0, 35000, false) + 'm';
+                let eta = _.random(0, duration, false) + 'min';
+                let temperature = _.random(-56, 28, false) + 'C';
+                let weatherOptions = ['Rainy', 'Cloudy', 'Sunny', 'Partly Cloudy', 'Snow', 'Hail', 'Cats and Dogs']; // I apologize for my teammate
+                let oWeather = weatherOptions[_.random(0, weatherOptions.length - 1, false)];
+                let dWeather = weatherOptions[_.random(0, weatherOptions.length - 1, false)];
 
                 try {
                     const mongoFlight = {
@@ -132,7 +141,14 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
                         scheduledDepartureTime: departureTime.toISOString(true),
                         estimatedArrivalTime: arrivalTime.toISOString(true),
                         scheduledArrivalTime: arrivalTime.toISOString(true),
+                        speed,
+                        altitude,
+                        eta,
+                        temperature,
+                        originWeather: oWeather,
+                        destinationWeather: dWeather,
                     };
+
                     flightsToInsert.push(mongoFlight);
                 } catch (err) {
                     console.error(err);
