@@ -128,6 +128,8 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
                 let weatherOptions = ['Rainy', 'Cloudy', 'Sunny', 'Partly Cloudy', 'Snow', 'Hail', 'Cats and Dogs']; // I apologize for my teammate
                 let oWeather = weatherOptions[_.random(0, weatherOptions.length - 1, false)];
                 let dWeather = weatherOptions[_.random(0, weatherOptions.length - 1, false)];
+                let bathroomOptions = ['Unoccupied', 'Occupied', 'Out of Order'];
+                let bStatus = bathroomOptions[_.random(0, bathroomOptions.length - 1, false)];
 
                 try {
                     const mongoFlight = {
@@ -147,6 +149,7 @@ function createMockFlightDataForRange(startDate, endDate, maxPerDay = 40) {
                         temperature,
                         originWeather: oWeather,
                         destinationWeather: dWeather,
+                        bathroomStatus: bStatus,
                     };
 
                     flightsToInsert.push(mongoFlight);

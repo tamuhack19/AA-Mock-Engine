@@ -8,7 +8,8 @@ module.exports = {
     flight: flight,
     flights: flights,
     setFlightStatus: setFlightStatus,
-    retrieveFlights: retrieveFlights
+    retrieveFlights: retrieveFlights,
+    currentFlight: currentFlight
 };
 
 function flight(req, res) {
@@ -151,4 +152,40 @@ function setFlightStatus(req, res) {
         res.status(400).json({"error": "Something went wrong updating flight status", err: err});
     }
 
+}
+
+// Simulate the flight we are currently on
+function currentFlight(req, res) {
+    try {
+        //let flightNumber = _.get(req, "swagger.params.flightNumber.value");
+        //console.log(queryParams)
+        //let flights = mongoHelper.getDb().collection("flight");
+
+        //let thisFlight = mongoHelper.getDb().flight.findOne();
+        //console.log(thisFlight);
+        //let test = db.collection.aggregate([{$match: {"flightNumber": "8923"}}]).pretty();
+        //console.log(test + 'aaaa');
+        mongoHelper.getDb().collection("flight").aggregate([{$sample: {size: 1}}], function(err, record){
+            if (err || record == null) {
+                res.status(400).json({"error": "Flight could not be found"});
+                console.log(err);
+                return;
+            };
+            console.log(record);
+            res.json(record);
+        });
+        //res.json(mongoHelper.getDb().collection.aggregate([{$sample: {size: 1}}])); 
+
+        /*flights.findOne(queryParams, function(err, record) {
+            if (err || record == null) {
+                res.status(400).json({"error": "Flight could not be found"});
+                console.log(err);
+                return;
+            };
+            res.json(record);
+        });*/
+
+    } catch(err) {
+        res.status(400).json({"error": "Something went wrong looking for that flight", err: err});
+    }
 }

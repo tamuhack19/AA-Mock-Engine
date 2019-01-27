@@ -242,6 +242,29 @@ paths:
           description: Error retrieving flights
           schema:
             type: string
+
+  /currentFlight:
+    x-swagger-router-controller: flight
+    get:
+      description: Returns a random flight's information for simulating current flight
+      tags:
+          - Flight
+      operationId: currentFlight
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/FlightSegment"
+        "404":
+          description: Flight not found
+          schema:
+            type: string
+        "500":
+            description: Error retrieving flight
+            schema:
+              type: string
+
   /flightStatus:
     x-swagger-router-controller: flight
     post:
